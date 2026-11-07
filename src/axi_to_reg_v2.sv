@@ -198,7 +198,7 @@ module axi_to_reg_v2 #(
       .reg_rsp_i ( reg_rsp[i] )
     );
 
-    // filter zero strobe writes early, directly ack them
+    // Ack inactive banks locally; do not issue reads with side effects.
     reg_demux #(
       .NoPorts ( 32'd2     ),
       .req_t   ( reg_req_t ),
@@ -206,14 +206,14 @@ module axi_to_reg_v2 #(
     ) i_reg_demux (
       .clk_i,
       .rst_ni,
-      .in_select_i ( reg_req[i].write & (reg_req[i].wstrb == '0) ),
+      .in_select_i ( reg_req[i].wstrb == '0                     ),
       .in_req_i    ( reg_req[i]                                  ),
       .in_rsp_o    ( reg_rsp[i]                                  ),
       .out_req_o   ( {zero_w_req[i], valid_req[i]}               ),
       .out_rsp_i   ( {zero_w_rsp[i], valid_rsp[i]}               )
     );
 
-    // ack zero strobe writes here
+    // Return one response for every inactive read or zero-strobe write bank.
     assign zero_w_rsp[i].ready = 1'b1;
     assign zero_w_rsp[i].error = 1'b0;
     assign zero_w_rsp[i].rdata = '0;

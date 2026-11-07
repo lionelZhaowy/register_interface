@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+- `axi_to_reg_v2`: Ack inactive read banks without a downstream register access.
+  Requires the companion AXI read byte-enable change.
+
 ## 0.4.7 - 2025-11-20
 ### Added
 - Add `apb_to_reg_v2` module without interfaces.
